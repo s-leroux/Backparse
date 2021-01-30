@@ -1,0 +1,31 @@
+{
+  "name": "backparse",
+  "version": "0.0.0",
+  "description": "A backtracking parser for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s-leroux/Backparse.git"
+  },
+  "keywords": [
+    "parser",
+    "grammar"
+  ],
+  "author": "Sylvain Leroux <sylvain@chicoree.fr>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/s-leroux/Backparse/issues"
+  },
+  "homepage": "https://github.com/s-leroux/Backparse#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1"
+  },
+  "dependencies": {
+    "debug": "^4.3.1",
+    "bluebird": "^3.7.2"
+  }
+}

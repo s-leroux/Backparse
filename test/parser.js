@@ -46,5 +46,23 @@ describe("The parser", function() {
       assert.equal(parser._status, "success");
     });
 
+    it("should detect invalid sentences", function() {
+      const parser = new Parser("r1");
+      parser.define("r1",
+        [token("A"), rule("r2"), token("A")]
+      );
+
+      parser.define("r2",
+        [ token('B'), rule("r2") ],
+        [ token('B') ]
+      );
+
+
+      for(let tk of ['A', 'B', 'A', 'B', 'A', END]) {
+        parser.accept(tk);
+      }
+      assert.equal(parser._status, "failure");
+    });
+
 });
 

@@ -10,3 +10,4 @@ describe("module", function() {
     });
 });
 
+require("./parser");

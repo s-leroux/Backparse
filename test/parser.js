@@ -23,7 +23,7 @@ describe("The parser", function() {
       for(let tk of ['A', 'B', 'B', 'A', END]) {
         parser.accept(tk);
       }
-      assert.isTrue(parser._state == parser._success);
+      assert.equal(parser._status, "success");
     });
 
     it("should follow the longuest sentence", function() {
@@ -43,7 +43,7 @@ describe("The parser", function() {
       for(let tk of ['A', 'B', 'A', 'B', 'A', END]) {
         parser.accept(tk);
       }
-      assert.isTrue(parser._state == parser._success);
+      assert.equal(parser._status, "success");
     });
 
 });

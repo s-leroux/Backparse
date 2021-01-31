@@ -19,8 +19,26 @@ describe("The parser", function() {
         [ token('B') ]
       );
 
-
       for(let tk of ['A', 'B', 'B', 'A', END]) {
+        parser.accept(tk);
+      }
+      assert.equal(parser._status, "success");
+    });
+
+
+    it("should accept mutually recursive grammars", function() {
+      const parser = new Parser("r1");
+      parser.define("r1",
+        [token('A'), rule("r2")],
+        [token('A')]
+      );
+
+      parser.define("r2",
+        [ token('B'), rule("r1") ],
+      );
+
+
+      for(let tk of ['A', 'B', 'A', 'B', 'A', 'B', 'A', END]) {
         parser.accept(tk);
       }
       assert.equal(parser._status, "success");
@@ -62,6 +80,25 @@ describe("The parser", function() {
         parser.accept(tk);
       }
       assert.equal(parser._status, "failure");
+    });
+
+    it("should accept epsilon-transitions", function() {
+      const parser = new Parser("r1");
+      parser.define("r1",
+        [token('A'), rule("r2"), token("A")],
+        [token('C')]
+      );
+
+      parser.define("r2",
+        [ token('B'), rule("r2") ],
+        [ success() ]
+      );
+
+
+      for(let tk of ['A', 'B', 'B', 'A', END]) {
+        parser.accept(tk);
+      }
+      assert.equal(parser._status, "success");
     });
 
 });

@@ -22,6 +22,7 @@
   "homepage": "https://github.com/s-leroux/Backparse#readme",
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^7.19.0",
     "mocha": "^8.2.1"
   },
   "dependencies": {

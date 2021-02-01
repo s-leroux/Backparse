@@ -2,7 +2,7 @@ const debug = require("debug")("backparse:tests-parser");
 const chai = require('chai');
 const assert = chai.assert;
 
-const { Parser, rule, token, success, END } = require("../lib/parser");
+const { Parser, rule, token, END } = require("../lib/parser");
 
 describe("The parser", function() {
     this.timeout(50);

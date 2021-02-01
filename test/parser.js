@@ -23,6 +23,8 @@ describe("The parser", function() {
         parser.accept(tk);
       }
       assert.equal(parser._status, "success");
+      let ast = parser.ast();
+      console.log(JSON.stringify(ast, null, 2));
     });
 
 
@@ -62,6 +64,8 @@ describe("The parser", function() {
         parser.accept(tk);
       }
       assert.equal(parser._status, "success");
+      let ast = parser.ast();
+      console.log(JSON.stringify(ast, null, 2));
     });
 
     it("should detect invalid sentences", function() {
@@ -80,6 +84,8 @@ describe("The parser", function() {
         parser.accept(tk);
       }
       assert.equal(parser._status, "failure");
+      let ast = parser.ast();
+      console.log(JSON.stringify(ast, null, 2));
     });
 
     it("should accept epsilon-transitions", function() {
@@ -91,13 +97,61 @@ describe("The parser", function() {
 
       parser.define("r2",
         [ token('B'), rule("r2") ],
-        [ success() ]
+        [  ]
       );
 
 
       for(let tk of ['A', 'B', 'B', 'A', END]) {
         parser.accept(tk);
       }
+      assert.equal(parser._status, "success");
+      let ast = parser.ast();
+      console.log(JSON.stringify(ast, null, 2));
+    });
+
+
+    it("should ...", function() {
+      const parser = new Parser("text");
+      parser.define("text",
+        [token('word'), rule("em")],
+        [token('word'), rule("text")],
+        [token('word')],
+      );
+
+      parser.define("em",
+        [ token('em'), token('word'), token("em") ],
+      );
+
+
+      for(let tk of ['word', 'word', 'em', 'word', 'em', END]) {
+        parser.accept(tk);
+      }
+      assert.equal(parser._status, "success");
+    });
+
+    it("should ...", function() {
+      const parser = new Parser("r1");
+      parser.define("r1",
+        [token('A'), rule("r2")],
+      );
+      parser.define("r2",
+        [token('B'), rule("r3")],
+      );
+      parser.define("r3",
+        [token('C'), rule("r4")],
+        [token('E')],
+      );
+      parser.define("r4",
+        [token('D')],
+      );
+
+
+      for(let tk of ['A', 'B', 'E', END]) {
+        parser.accept(tk);
+      }
+
+      let ast = parser.ast();
+      console.log(JSON.stringify(ast, null, 2));
       assert.equal(parser._status, "success");
     });
 

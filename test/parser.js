@@ -12,7 +12,7 @@ describe("The parser", function() {
   it("should accept recursive grammars", function() {
     const grammar = new Grammar("r1");
     grammar.define("r1",
-      [token("A"), rule("r2"), token("A")],
+      [token("A"), rule("r2"), token("C")],
       [token("C")]
     );
 
@@ -22,31 +22,31 @@ describe("The parser", function() {
     );
 
     const parser = grammar.parser("r1");
-    for(let tk of ["A", "B", "B", "A", END]) {
+    for(let tk of ["A", "B", "B", "C", END]) {
       parser.accept(tk);
     }
     assert.equal(parser._status, "success");
     assert.deepEqual(
       parser.ast(),
       {
-        "trace": "R:r1",
+        "value": "r1",
         "children": [
           {
-            "trace": "T:A",
+            "value": "A",
             "children": []
           },
           {
-            "trace": "R:r2",
+            "value": "r2",
             "children": [
               {
-                "trace": "T:B",
+                "value": "B",
                 "children": []
               },
               {
-                "trace": "R:r2",
+                "value": "r2",
                 "children": [
                   {
-                    "trace": "T:B",
+                    "value": "B",
                     "children": []
                   }
                 ]
@@ -54,7 +54,7 @@ describe("The parser", function() {
             ]
           },
           {
-            "trace": "T:A",
+            "value": "C",
             "children": []
           }
         ]
@@ -83,38 +83,38 @@ describe("The parser", function() {
     assert.deepEqual(
       parser.ast(),
       {
-        "trace": "R:r1",
+        "value": "r1",
         "children": [
           {
-            "trace": "T:A",
+            "value": "A",
             "children": []
           },
           {
-            "trace": "R:r2",
+            "value": "r2",
             "children": [
               {
-                "trace": "T:B",
+                "value": "B",
                 "children": []
               },
               {
-                "trace": "R:r1",
+                "value": "r1",
                 "children": [
                   {
-                    "trace": "T:A",
+                    "value": "A",
                     "children": []
                   },
                   {
-                    "trace": "R:r2",
+                    "value": "r2",
                     "children": [
                       {
-                        "trace": "T:B",
+                        "value": "B",
                         "children": []
                       },
                       {
-                        "trace": "R:r1",
+                        "value": "r1",
                         "children": [
                           {
-                            "trace": "T:A",
+                            "value": "A",
                             "children": []
                           }
                         ]
@@ -152,41 +152,41 @@ describe("The parser", function() {
     assert.deepEqual(
       parser.ast(),
       {
-        "trace": "R:r1",
+        "value": "r1",
         "children": [
           {
-            "trace": "R:r2",
+            "value": "r2",
             "children": [
               {
-                "trace": "T:A",
+                "value": "A",
                 "children": []
               },
               {
-                "trace": "R:r2",
+                "value": "r2",
                 "children": [
                   {
-                    "trace": "T:B",
+                    "value": "B",
                     "children": []
                   },
                   {
-                    "trace": "R:r2",
+                    "value": "r2",
                     "children": [
                       {
-                        "trace": "T:A",
+                        "value": "A",
                         "children": []
                       },
                       {
-                        "trace": "R:r2",
+                        "value": "r2",
                         "children": [
                           {
-                            "trace": "T:B",
+                            "value": "B",
                             "children": []
                           },
                           {
-                            "trace": "R:r2",
+                            "value": "r2",
                             "children": [
                               {
-                                "trace": "T:A",
+                                "value": "A",
                                 "children": []
                               }
                             ]
@@ -244,28 +244,28 @@ describe("The parser", function() {
     assert.deepEqual(
       parser.ast(),
       {
-        "trace": "R:r1",
+        "value": "r1",
         "children": [
           {
-            "trace": "T:A",
+            "value": "A",
             "children": []
           },
           {
-            "trace": "R:r2",
+            "value": "r2",
             "children": [
               {
-                "trace": "T:B",
+                "value": "B",
                 "children": []
               },
               {
-                "trace": "R:r2",
+                "value": "r2",
                 "children": [
                   {
-                    "trace": "T:B",
+                    "value": "B",
                     "children": []
                   },
                   {
-                    "trace": "R:r2",
+                    "value": "r2",
                     "children": []
                   }
                 ]
@@ -273,7 +273,7 @@ describe("The parser", function() {
             ]
           },
           {
-            "trace": "T:A",
+            "value": "A",
             "children": []
           }
         ]
@@ -308,14 +308,14 @@ describe("The parser", function() {
       assert.deepEqual(
         parser.ast(),
         {
-          "trace": "R:r1",
+          "value": "r1",
           "children": [
             {
-              "trace": "T:A",
+              "value": "A",
               "children": []
             },
             {
-              "trace": "T:A",
+              "value": "A",
               "children": []
             }
           ]
@@ -334,23 +334,23 @@ describe("The parser", function() {
       assert.deepEqual(
         parser.ast(),
         {
-          "trace": "R:r1",
+          "value": "r1",
           "children": [
             {
-              "trace": "T:A",
+              "value": "A",
               "children": []
             },
             {
-              "trace": "R:r2",
+              "value": "r2",
               "children": [
                 {
-                  "trace": "T:B",
+                  "value": "B",
                   "children": []
                 }
               ]
             },
             {
-              "trace": "T:A",
+              "value": "A",
               "children": []
             }
           ]
@@ -364,33 +364,41 @@ describe("The parser", function() {
         parser.accept(tk);
       }
       console.log(JSON.stringify(parser.ast(), null, 2));
+      console.log(parser.ast());
       assert.equal(parser._status, "success");
-
       assert.deepEqual(
         parser.ast(),
         {
-          "trace": "R:r1",
+          "value": "r1",
           "children": [
             {
-              "trace": "T:A",
+              "value": "A",
               "children": []
             },
             {
-              "trace": "R:r2",
+              "value": "r2",
               "children": [
                 {
-                  "trace": "T:C",
+                  "value": "C",
                   "children": []
                 }
               ]
             },
             {
-              "trace": "T:A",
+              "value": "A",
               "children": []
             }
           ]
         }
       );
+    });
+
+    it("should detect bad token in the optional paths", function() {
+      const parser = grammar.parser("r1");
+      for(let tk of ["A", "D", "A", END]) {
+        parser.accept(tk);
+      }
+      assert.equal(parser._status, "failure");
 
     });
   });

@@ -7,7 +7,7 @@ const assert = chai.assert;
 const { Grammar, rule, token, opt, END } = require("../lib/parser");
 
 describe("The parser", function() {
-  this.timeout(60);
+  this.timeout(70);
 
   it("should accept recursive grammars", function() {
     const grammar = new Grammar("r1");

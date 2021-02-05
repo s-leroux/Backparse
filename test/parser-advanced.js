@@ -42,7 +42,6 @@ describe("parser (advanced)", function() {
 
     it("should accept the test sentence with the default packer", function() {
       for(let sentence of sentences) {
-        console.log(sentence);
         const parser = grammar.parser("r1", new FlatPacker);
 
         for(let tk of sentence) {
@@ -132,7 +131,7 @@ describe("parser (advanced)", function() {
     it("can't backtrack below the current level", function() {
       const parser = grammar.parser("r1", new RejectRulePackerR1);
       parser.accept(...sentence);
-      assert.equal(parser._status, "success");
+      assert.equal(parser._status, "failure");
     });
 
   });

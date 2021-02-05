@@ -15,3 +15,5 @@ describe("module", function() {
 require("./packer");
 require("./parser");
 require("./parser-advanced");
+
+require("./examples/calculator");

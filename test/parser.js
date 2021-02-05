@@ -134,7 +134,7 @@ describe("The parser", function() {
       for(let tk of ["A", "A", END]) {
         parser.accept(tk);
       }
-      console.log(JSON.stringify(parser.ast(), null, 2));
+      // console.log(JSON.stringify(parser.ast(), null, 2));
       assert.equal(parser._status, "success");
 
       assert.equal( parser.ast(),"r1(A,A)");
@@ -145,7 +145,7 @@ describe("The parser", function() {
       for(let tk of ["A", "B", "A", END]) {
         parser.accept(tk);
       }
-      console.log(JSON.stringify(parser.ast(), null, 2));
+      // console.log(JSON.stringify(parser.ast(), null, 2));
       assert.equal(parser._status, "success");
 
       assert.equal( parser.ast(), "r1(A,r2(B),A)");
@@ -173,7 +173,7 @@ describe("The parser", function() {
       for(let tk of ["A", "A", END]) {
         parser.accept(tk);
       }
-      console.log(JSON.stringify(parser.ast(), null, 2));
+      // console.log(JSON.stringify(parser.ast(), null, 2));
       assert.equal(parser._status, "success");
 
       assert.equal( parser.ast(), "r1(A,*(),A)");
@@ -184,7 +184,7 @@ describe("The parser", function() {
       for(let tk of ["A", "B", "A", END]) {
         parser.accept(tk);
       }
-      console.log(JSON.stringify(parser.ast(), null, 2));
+      // console.log(JSON.stringify(parser.ast(), null, 2));
       assert.equal(parser._status, "success");
 
       assert.equal( parser.ast(), "r1(A,*(r2(B)),A)");
@@ -195,7 +195,7 @@ describe("The parser", function() {
       for(let tk of ["A", "B", "B", "A", END]) {
         parser.accept(tk);
       }
-      console.log(JSON.stringify(parser.ast(), null, 2));
+      // console.log(JSON.stringify(parser.ast(), null, 2));
       assert.equal(parser._status, "success");
 
       assert.equal( parser.ast(), "r1(A,*(r2(B),r2(B)),A)" );

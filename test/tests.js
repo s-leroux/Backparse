@@ -1,13 +1,17 @@
+"use strict";
+
 const debug = require("debug")("asciishaman:tests");
 
-const assert = require('chai').assert;
+const assert = require("chai").assert;
 
 describe("module", function() {
-    let shaman = null;
+  let shaman = null;
 
-    it("should be loadable", function() {
-        gp = require("../index.js");
-    });
+  it("should be loadable", function() {
+    const gp = require("../index.js");
+  });
 });
 
+require("./packer");
 require("./parser");
+require("./parser-advanced");

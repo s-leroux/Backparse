@@ -4,7 +4,7 @@ const debug = require("debug")("backparse:example-calculator");
 const chai = require("chai");
 const assert = chai.assert;
 
-const { Grammar, rule, token, opt, several, END } = require("../../lib/parser");
+const { Grammar, Rule, Token, Opt, Several, END } = require("../../lib/parser");
 
 // Tokens as they could be returned from a typical tokenizer
 const Integer = (str) => ({ str: str, tag: "int"});
@@ -15,21 +15,21 @@ const RPar = () => ({ str: ")", tag: ")" });
 
 // A grammar for basic arithmetic operations
 const grammar = new Grammar();
-grammar.define("expr", [ rule("sum") ]);
+grammar.define("expr", [ Rule("sum") ]);
 grammar.define("sum", 
-  [ rule("product"), token('+'), rule("expr") ],
-  [ rule("product") ]
+  [ Rule("product"), Token('+'), Rule("expr") ],
+  [ Rule("product") ]
 );
 grammar.define("product", 
-  [ rule("term"), token('*'), rule("product") ],
-  [ rule("term") ]
+  [ Rule("term"), Token('*'), Rule("product") ],
+  [ Rule("term") ]
 );
 grammar.define("term", 
-  [ rule('parenthesis') ],
-  [ token("int") ]
+  [ Rule('parenthesis') ],
+  [ Token("int") ]
 );
 grammar.define("parenthesis", 
-  [ token('('), rule("expr"), token(')') ]
+  [ Token('('), Rule("expr"), Token(')') ]
 );
 
 class Packer {

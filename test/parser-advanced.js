@@ -5,7 +5,7 @@ const chai = require("chai");
 const assert = chai.assert;
 
 const { FlatPacker } = require("../lib/packer");
-const { Grammar, rule, token, opt, several, END } = require("../lib/parser");
+const { Grammar, Rule, Token, Opt, Several, END } = require("../lib/parser");
 
 describe("parser (advanced)", function() {
   this.timeout(70);
@@ -13,12 +13,12 @@ describe("parser (advanced)", function() {
   describe("rejection at semantic level", function() {
     const grammar = new Grammar();
     grammar.define("r1",
-      [token("A"), rule("r2"), token("D")],
+      [Token("A"), Rule("r2"), Token("D")],
     );
 
     grammar.define("r2",
-      [ token("B") ],
-      [ token("C") ]
+      [ Token("B") ],
+      [ Token("C") ]
     );
 
     const sentences = [ ["A", "B", "D", END ],
@@ -32,11 +32,11 @@ describe("parser (advanced)", function() {
 
     class RejectRulePacker extends FlatPacker {
       rule(name, ...args) {
-        if (name !== "r2") {
-          return super.rule(name, ...args);
+        if ((name === "r2") && (args[0] === "B")) {
+          return undefined;
         }
 
-        return (args[0] === "B") ? undefined : super.rule(name, ...args);
+        return super.rule(name, ...args);
       }
     };
 
@@ -81,38 +81,38 @@ describe("parser (advanced)", function() {
   describe("late rejection side-effect", function() {
     const grammar = new Grammar();
     grammar.define("r1",
-      [token("A"), rule("r2"), token("D")],
+      [Token("A"), Rule("r2"), Token("D")],
     );
 
     grammar.define("r2",
-      [ rule("r3") ],
-      [ rule("r4") ]
+      [ Rule("r3") ],
+      [ Rule("r4") ]
     );
 
     // the grammar is ambiguous.
     // a rejection rule on "r2" can't resolve the ambiguity
-    grammar.define("r3", [token("B")]);
-    grammar.define("r4", [token("B")]);
+    grammar.define("r3", [Token("B")]);
+    grammar.define("r4", [Token("B")]);
 
     const sentence = ["A", "B", "D", END ];
 
     class RejectRulePackerR2 extends FlatPacker {
       rule(name, ...args) {
-        if (name !== "r2") {
-          return super.rule(name, ...args);
+        if ((name === "r2") && (args[0] === "r3(B)")) {
+          return undefined;
         }
 
-        return (args[0] === "r3(B)") ? undefined : super.rule(name, ...args);
+        return super.rule(name, ...args);
       }
     };
 
     class RejectRulePackerR1 extends FlatPacker {
       rule(name, ...args) {
-        if (name !== "r1") {
-          return super.rule(name, ...args);
+        if ((name === "r1") && (args[1] === "r2(r3(B))")) {
+          return undefined;
         }
 
-        return (args[1] === "r2(r3(B))") ? undefined : super.rule(name, ...args);
+        return super.rule(name, ...args);
       }
     };
 

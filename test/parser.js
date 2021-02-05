@@ -5,7 +5,8 @@ const chai = require("chai");
 const assert = chai.assert;
 
 const { FlatPacker } = require("../lib/packer");
-const { Grammar, Rule, Token, Opt, Several, END } = require("../lib/parser");
+const { Grammar } = require("../lib/grammar");
+const { Rule, Token, Opt, Several, END } = require("../lib/parser");
 
 describe("The parser", function() {
   this.timeout(70);

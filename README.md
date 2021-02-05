@@ -24,6 +24,8 @@ Defining your grammar
 To define a grammar, you'll instanciate a `Grammar` object:
 
 ```
+const { Grammar } = require("backparse");
+
 const grammar = new Grammar();
 ```
 
@@ -41,7 +43,7 @@ grammar.define("r",
 );
 ```
 
-The exmple above defines a grammar containing only one rule. Notice the self-reference
+The example above defines a grammar containing only one rule. Notice the self-reference
 on the second alternative. This is how you define a recursive rule.
 
 A grammar may contain an arbitrary number of rules. Self-recursivity and mutual recursivity are

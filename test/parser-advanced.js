@@ -5,7 +5,8 @@ const chai = require("chai");
 const assert = chai.assert;
 
 const { FlatPacker } = require("../lib/packer");
-const { Grammar, Rule, Token, Opt, Several, END } = require("../lib/parser");
+const { Grammar } = require("../lib/grammar");
+const { Rule, Token, Opt, Several, END } = require("../lib/parser");
 
 describe("parser (advanced)", function() {
   this.timeout(70);
@@ -22,13 +23,13 @@ describe("parser (advanced)", function() {
     );
 
     const sentences = [ ["A", "B", "D", END ],
-                        ["A", "C", "D", END ] ];
+      ["A", "C", "D", END ] ];
 
     class RejectTokenPacker extends FlatPacker {
       token(name) {
         return (name === "B") ? undefined : super.token(name);
       }
-    };
+    }
 
     class RejectRulePacker extends FlatPacker {
       rule(name, ...args) {
@@ -38,7 +39,7 @@ describe("parser (advanced)", function() {
 
         return super.rule(name, ...args);
       }
-    };
+    }
 
     it("should accept the test sentence with the default packer", function() {
       for(let sentence of sentences) {
@@ -104,7 +105,7 @@ describe("parser (advanced)", function() {
 
         return super.rule(name, ...args);
       }
-    };
+    }
 
     class RejectRulePackerR1 extends FlatPacker {
       rule(name, ...args) {
@@ -114,7 +115,7 @@ describe("parser (advanced)", function() {
 
         return super.rule(name, ...args);
       }
-    };
+    }
 
     it("sanity check", function() {
       const parser = grammar.parser("r1", new FlatPacker);

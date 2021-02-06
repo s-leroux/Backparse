@@ -6,7 +6,7 @@ const assert = chai.assert;
 
 const { flatBuilder } = require("../lib/builder");
 const { Grammar } = require("../lib/grammar");
-const { Rule, Token, Opt, Several, END } = require("../lib/parser");
+const { Rule, Token, ZeroOrOne, ZeroOrMore, OneOrMore, END } = require("../lib/parser");
 
 describe("The parser", function() {
   this.timeout(70);
@@ -114,13 +114,13 @@ describe("The parser", function() {
     assert.equal( parser.ast(),"r1(A,r2(B,r2(B,r2())),A)");
   });
 
-  describe("optional path", function() {
+  describe("zero-or-one quantifier", function() {
     let grammar;
 
     beforeEach(function() {
       grammar = new Grammar();
       grammar.define("r1",
-        [Token("A"), Opt(Rule("r2")), Token("A")],
+        [Token("A"), ZeroOrOne(Rule("r2")), Token("A")],
         [Token("C")]
       );
 
@@ -153,13 +153,13 @@ describe("The parser", function() {
     });
   });
 
-  describe("kleene star", function() {
+  describe("zero-or-more quantifier", function() {
     let grammar;
 
     beforeEach(function() {
       grammar = new Grammar();
       grammar.define("r1",
-        [Token("A"), Several(Rule("r2")), Token("A")],
+        [Token("A"), ZeroOrMore(Rule("r2")), Token("A")],
         [Token("C")]
       );
 
@@ -177,7 +177,7 @@ describe("The parser", function() {
       // console.log(JSON.stringify(parser.ast(), null, 2));
       assert.equal(parser._status, "success");
 
-      assert.equal( parser.ast(), "r1(A,*(),A)");
+      assert.equal( parser.ast(), "r1(A,[],A)");
     });
 
     it("should accept 1 repetitions", function() {
@@ -188,7 +188,7 @@ describe("The parser", function() {
       // console.log(JSON.stringify(parser.ast(), null, 2));
       assert.equal(parser._status, "success");
 
-      assert.equal( parser.ast(), "r1(A,*(r2(B)),A)");
+      assert.equal( parser.ast(), "r1(A,[r2(B)],A)");
     });
 
     it("should accept 2 repetitions", function() {
@@ -199,7 +199,76 @@ describe("The parser", function() {
       // console.log(JSON.stringify(parser.ast(), null, 2));
       assert.equal(parser._status, "success");
 
-      assert.equal( parser.ast(), "r1(A,*(r2(B),r2(B)),A)" );
+      assert.equal( parser.ast(), "r1(A,[r2(B),r2(B)],A)" );
+    });
+
+    it("should reject bad sentences", function() {
+      this.timeout(1000);
+
+      const testCases = [
+        ["A", "A", "A", END],
+        ["A", "A", "B", END],
+        ["A", "B", "A", "B", END],
+        ["A", "B", "B", "A", "B", END],
+        ["A", "B", "B", "B", "A", "B", END],
+      ];
+
+      for(let testCase of testCases) {
+        const parser = grammar.parser("r1", flatBuilder);
+        for(let tk of testCase) {
+          parser.accept(tk);
+        }
+        assert.equal(parser._status, "failure", testCase.join(" "));
+      }
+    });
+  });
+
+
+  describe("one-or-more quantifier", function() {
+    let grammar;
+
+    beforeEach(function() {
+      grammar = new Grammar();
+      grammar.define("r1",
+        [Token("A"), OneOrMore(Rule("r2")), Token("A")],
+        [Token("C")]
+      );
+
+      grammar.define("r2",
+        [ Token("B") ],
+        [ Token("C") ]
+      );
+    });
+
+    it("should reject 0 repetitions", function() {
+      const parser = grammar.parser("r1", flatBuilder);
+      for(let tk of ["A", "A", END]) {
+        parser.accept(tk);
+      }
+      // console.log(JSON.stringify(parser.ast(), null, 2));
+      assert.equal(parser._status, "failure");
+    });
+
+    it("should accept 1 repetitions", function() {
+      const parser = grammar.parser("r1", flatBuilder);
+      for(let tk of ["A", "B", "A", END]) {
+        parser.accept(tk);
+      }
+      // console.log(JSON.stringify(parser.ast(), null, 2));
+      assert.equal(parser._status, "success");
+
+      assert.equal( parser.ast(), "r1(A,[r2(B)],A)");
+    });
+
+    it("should accept 2 repetitions", function() {
+      const parser = grammar.parser("r1", flatBuilder);
+      for(let tk of ["A", "B", "B", "A", END]) {
+        parser.accept(tk);
+      }
+      // console.log(JSON.stringify(parser.ast(), null, 2));
+      assert.equal(parser._status, "success");
+
+      assert.equal( parser.ast(), "r1(A,[r2(B),r2(B)],A)" );
     });
 
     it("should reject bad sentences", function() {
@@ -229,11 +298,11 @@ describe("The parser", function() {
       this.timeout(1000);
 
       const grammar = new Grammar();
-      grammar.define("r1", [Token("A"), Opt(Rule("r2"))], [Token("B"), Opt(Rule("r2"))]);
-      grammar.define("r2", [Token("A"), Opt(Rule("r3"))], [Token("B"), Opt(Rule("r3"))]);
-      grammar.define("r3", [Token("A"), Opt(Rule("r4"))], [Token("B"), Opt(Rule("r4"))]);
-      grammar.define("r4", [Token("A"), Opt(Rule("r5"))], [Token("B"), Opt(Rule("r5"))]);
-      grammar.define("r5", [Token("A"), Opt(Rule("r6"))], [Token("B"), Opt(Rule("r6"))]);
+      grammar.define("r1", [Token("A"), ZeroOrOne(Rule("r2"))], [Token("B"), ZeroOrOne(Rule("r2"))]);
+      grammar.define("r2", [Token("A"), ZeroOrOne(Rule("r3"))], [Token("B"), ZeroOrOne(Rule("r3"))]);
+      grammar.define("r3", [Token("A"), ZeroOrOne(Rule("r4"))], [Token("B"), ZeroOrOne(Rule("r4"))]);
+      grammar.define("r4", [Token("A"), ZeroOrOne(Rule("r5"))], [Token("B"), ZeroOrOne(Rule("r5"))]);
+      grammar.define("r5", [Token("A"), ZeroOrOne(Rule("r6"))], [Token("B"), ZeroOrOne(Rule("r6"))]);
       grammar.define("r6", [Token("A")], [Token("B")]);
 
       const testCases = [

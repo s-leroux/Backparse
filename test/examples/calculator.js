@@ -5,7 +5,7 @@ const chai = require("chai");
 const assert = chai.assert;
 
 const { Grammar } = require("../../lib/grammar");
-const { Rule, Lexeme, Token, Opt, Several, END } = require("../../lib/parser");
+const { Rule, Lexeme, Token, END } = require("../../lib/parser");
 
 // Tokens as they could be returned from a typical tokenizer
 const Integer = (str) => ({ value: str, tag: "int"});

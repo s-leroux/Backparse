@@ -50,8 +50,8 @@ A grammar may contain an arbitrary number of rules. Self-recursivity and mutual 
 supported as long a it's not a left-recursion. In that case, Backparse would enter in an infinite
 loop.
 
-In addition to the `Token` and `Rule` predicates, Backparse also provides the `Opt` predicate (equivalent
-to the `?` quantifier in regular expressions) and the `Several` predicate (equivalent to the `*`).
+In addition to the `Token` and `Rule` predicates, Backparse also provides several quntifiers:
+`ZeroOrOne`, `ZeroOrMore` and `OneOrMore`.
 
 See the test files for exemples of usage.
 

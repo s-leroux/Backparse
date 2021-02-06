@@ -6,7 +6,7 @@ const assert = chai.assert;
 
 const { flatBuilder } = require("../lib/builder");
 const { Grammar } = require("../lib/grammar");
-const { Rule, Token, Opt, Several, END } = require("../lib/parser");
+const { Rule, Token, ZeroOrOne, ZeroOrMore, END } = require("../lib/parser");
 
 describe("parser (advanced)", function() {
   this.timeout(70);

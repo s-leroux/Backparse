@@ -4,7 +4,7 @@ const debug = require("debug")("backparse:tests-parser");
 const chai = require("chai");
 const assert = chai.assert;
 
-const { FlatPacker } = require("../lib/packer");
+const { flatBuilder } = require("../lib/builder");
 const { Grammar } = require("../lib/grammar");
 const { Rule, Token, Opt, Several, END } = require("../lib/parser");
 
@@ -23,7 +23,7 @@ describe("The parser", function() {
       [ Token("B") ]
     );
 
-    const parser = grammar.parser("r1", new FlatPacker, new FlatPacker);
+    const parser = grammar.parser("r1", flatBuilder, flatBuilder);
     for(let tk of ["A", "B", "B", "C", END]) {
       parser.accept(tk);
     }
@@ -44,7 +44,7 @@ describe("The parser", function() {
     );
 
 
-    const parser = grammar.parser("r1", new FlatPacker);
+    const parser = grammar.parser("r1", flatBuilder);
     for(let tk of ["A", "B", "A", "B", "A", END]) {
       parser.accept(tk);
     }
@@ -66,7 +66,7 @@ describe("The parser", function() {
     );
 
 
-    const parser = grammar.parser("r1", new FlatPacker);
+    const parser = grammar.parser("r1", flatBuilder);
     for(let tk of ["A", "B", "A", "B", "A", END]) {
       parser.accept(tk);
     }
@@ -86,7 +86,7 @@ describe("The parser", function() {
     );
 
 
-    const parser = grammar.parser("r1", new FlatPacker);
+    const parser = grammar.parser("r1", flatBuilder);
     for(let tk of ["A", "B", "A", "B", "A", END]) {
       parser.accept(tk);
     }
@@ -106,7 +106,7 @@ describe("The parser", function() {
     );
 
 
-    const parser = grammar.parser("r1", new FlatPacker);
+    const parser = grammar.parser("r1", flatBuilder);
     for(let tk of ["A", "B", "B", "A", END]) {
       parser.accept(tk);
     }
@@ -131,7 +131,7 @@ describe("The parser", function() {
     });
 
     it("should accept optional paths (shortcut)", function() {
-      const parser = grammar.parser("r1", new FlatPacker);
+      const parser = grammar.parser("r1", flatBuilder);
       for(let tk of ["A", "A", END]) {
         parser.accept(tk);
       }
@@ -142,7 +142,7 @@ describe("The parser", function() {
     });
 
     it("should accept optional paths (1st)", function() {
-      const parser = grammar.parser("r1", new FlatPacker);
+      const parser = grammar.parser("r1", flatBuilder);
       for(let tk of ["A", "B", "A", END]) {
         parser.accept(tk);
       }
@@ -170,7 +170,7 @@ describe("The parser", function() {
     });
 
     it("should accept 0 repetitions", function() {
-      const parser = grammar.parser("r1", new FlatPacker);
+      const parser = grammar.parser("r1", flatBuilder);
       for(let tk of ["A", "A", END]) {
         parser.accept(tk);
       }
@@ -181,7 +181,7 @@ describe("The parser", function() {
     });
 
     it("should accept 1 repetitions", function() {
-      const parser = grammar.parser("r1", new FlatPacker);
+      const parser = grammar.parser("r1", flatBuilder);
       for(let tk of ["A", "B", "A", END]) {
         parser.accept(tk);
       }
@@ -192,7 +192,7 @@ describe("The parser", function() {
     });
 
     it("should accept 2 repetitions", function() {
-      const parser = grammar.parser("r1", new FlatPacker);
+      const parser = grammar.parser("r1", flatBuilder);
       for(let tk of ["A", "B", "B", "A", END]) {
         parser.accept(tk);
       }
@@ -214,7 +214,7 @@ describe("The parser", function() {
       ];
 
       for(let testCase of testCases) {
-        const parser = grammar.parser("r1", new FlatPacker);
+        const parser = grammar.parser("r1", flatBuilder);
         for(let tk of testCase) {
           parser.accept(tk);
         }
@@ -248,7 +248,7 @@ describe("The parser", function() {
       ];
 
       for(let testCase of testCases) {
-        const parser = grammar.parser("r1", new FlatPacker);
+        const parser = grammar.parser("r1", flatBuilder);
         for(let tk of testCase) {
           parser.accept(tk);
         }

@@ -4,7 +4,7 @@ const debug = require("debug")("backparse:tests-parser-advanced");
 const chai = require("chai");
 const assert = chai.assert;
 
-const { FlatPacker } = require("../lib/packer");
+const { flatBuilder } = require("../lib/builder");
 const { Grammar } = require("../lib/grammar");
 const { Rule, Token, Opt, Several, END } = require("../lib/parser");
 
@@ -25,25 +25,17 @@ describe("parser (advanced)", function() {
     const sentences = [ ["A", "B", "D", END ],
       ["A", "C", "D", END ] ];
 
-    class RejectTokenPacker extends FlatPacker {
-      token(name) {
-        return (name === "B") ? undefined : super.token(name);
+    function rejectRuleBuilder(name, ...args) {
+      if ((name === "r2") && (args[0] === "B")) {
+        return undefined;
       }
+
+      return flatBuilder(name, ...args);
     }
 
-    class RejectRulePacker extends FlatPacker {
-      rule(name, ...args) {
-        if ((name === "r2") && (args[0] === "B")) {
-          return undefined;
-        }
-
-        return super.rule(name, ...args);
-      }
-    }
-
-    it("should accept the test sentence with the default packer", function() {
+    it("should accept the test sentence with the default builder", function() {
       for(let sentence of sentences) {
-        const parser = grammar.parser("r1", new FlatPacker);
+        const parser = grammar.parser("r1", flatBuilder);
 
         for(let tk of sentence) {
           parser.accept(tk);
@@ -53,26 +45,14 @@ describe("parser (advanced)", function() {
       }
     });
 
-    it("should reject a sentence if the packer refuses a token", function() {
-      const parser = grammar.parser("r1", new RejectTokenPacker);
+    it("should reject a sentence if the builder refuses a rule", function() {
+      const parser = grammar.parser("r1", rejectRuleBuilder);
       parser.accept(...sentences[0]);
       assert.equal(parser._status, "failure");
     });
 
-    it("should accept a sentence if the packer accepts it", function() {
-      const parser = grammar.parser("r1", new RejectTokenPacker);
-      parser.accept(...sentences[1]);
-      assert.equal(parser._status, "success");
-    });
-
-    it("should reject a sentence if the packer refuses a rule", function() {
-      const parser = grammar.parser("r1", new RejectRulePacker);
-      parser.accept(...sentences[0]);
-      assert.equal(parser._status, "failure");
-    });
-
-    it("should accept a sentence if the packer accepts it", function() {
-      const parser = grammar.parser("r1", new RejectRulePacker);
+    it("should accept a sentence if the builder accepts it", function() {
+      const parser = grammar.parser("r1", rejectRuleBuilder);
       parser.accept(...sentences[1]);
       assert.equal(parser._status, "success");
     });
@@ -97,40 +77,36 @@ describe("parser (advanced)", function() {
 
     const sentence = ["A", "B", "D", END ];
 
-    class RejectRulePackerR2 extends FlatPacker {
-      rule(name, ...args) {
-        if ((name === "r2") && (args[0] === "r3(B)")) {
-          return undefined;
-        }
-
-        return super.rule(name, ...args);
+    function rejectRuleBuilderR2(name, ...args) {
+      if ((name === "r2") && (args[0] === "r3(B)")) {
+        return undefined;
       }
+
+      return flatBuilder(name, ...args);
     }
 
-    class RejectRulePackerR1 extends FlatPacker {
-      rule(name, ...args) {
-        if ((name === "r1") && (args[1] === "r2(r3(B))")) {
-          return undefined;
-        }
-
-        return super.rule(name, ...args);
+    function rejectRuleBuilderR1(name, ...args) {
+      if ((name === "r1") && (args[1] === "r2(r3(B))")) {
+        return undefined;
       }
+
+      return flatBuilder(name, ...args);
     }
 
     it("sanity check", function() {
-      const parser = grammar.parser("r1", new FlatPacker);
+      const parser = grammar.parser("r1", flatBuilder);
       parser.accept(...sentence);
       assert.equal(parser._status, "success");
     });
 
     it("backtracking is possible at the current level or above", function() {
-      const parser = grammar.parser("r1", new RejectRulePackerR2);
+      const parser = grammar.parser("r1", rejectRuleBuilderR2);
       parser.accept(...sentence);
       assert.equal(parser._status, "success");
     });
 
     it("can't backtrack below the current level", function() {
-      const parser = grammar.parser("r1", new RejectRulePackerR1);
+      const parser = grammar.parser("r1", rejectRuleBuilderR1);
       parser.accept(...sentence);
       assert.equal(parser._status, "failure");
     });

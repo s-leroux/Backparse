@@ -55,7 +55,22 @@ to the `?` quantifier in regular expressions) and the `Several` predicate (equiv
 
 See the test files for exemples of usage.
 
+Builder
+=======
 
+The grammar defines the syntactic rules or the language to parse. The _builder_ function
+defines its semantic. Each time the parser reduce a rule, it will invoke the builder with
+the name of the rule and all its children node. This processus occurs from the bottom (the
+leafs of the syntax tree) to the top (the root node of your grammar).
+
+There is no garantee the builder will be called only once per node. In fact, due to backtracking,
+there are chances the builder will be called _many times_ on the same node. As a rule
+of thumb, the builder shouldn't have any side effect.
+
+In the `test/examples` folder, you will find a calculator which uses the builder to compute
+the intermediate results on the fly during parsing. On the other hand, you may prefer building
+an Abstract Syntax Tree to further manipulate it before generating code. The choice is up
+to you [XXX Missing AST example].
 
 License
 =======

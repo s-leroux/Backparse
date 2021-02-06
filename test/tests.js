@@ -12,7 +12,7 @@ describe("module", function() {
   });
 });
 
-require("./packer");
+require("./builder");
 require("./parser");
 require("./parser-advanced");
 

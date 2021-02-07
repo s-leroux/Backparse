@@ -138,7 +138,7 @@ describe("The parser", function() {
       // console.log(JSON.stringify(parser.ast(), null, 2));
       assert.equal(parser._status, "success");
 
-      assert.equal( parser.ast(),"r1(A,A)");
+      assert.equal( parser.ast(),"r1(A,undefined,A)");
     });
 
     it("should accept optional paths (1st)", function() {

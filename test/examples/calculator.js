@@ -15,7 +15,7 @@ const LPar = () => ("(");
 const RPar = () => (")");
 
 function MyLexeme(tag) {
-  return Lexeme((tk) => (tk.tag == tag));
+  return Lexeme((tk, fail) => (tk.tag == tag ? tk.value : fail));
 }
 
 // A grammar for basic arithmetic operations
@@ -45,7 +45,7 @@ function builder(name, ...args) {
     case "product": return args[0] * (args[2] ?? 1);
     case "term": return args[0];
     case "parenthesis": return args[1];
-    case "int": return parseInt(args[0].value);
+    case "int": return parseInt(args[0]);
   }
 }
 

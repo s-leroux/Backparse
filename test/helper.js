@@ -4,17 +4,15 @@ const debug = require("debug")("backparse:tests-builder");
 const chai = require("chai");
 const assert = chai.assert;
 
-const { flatBuilder } = require("../lib/builder");
+const { Wrap } = require("../lib/helper");
 
-describe("flat-builder", function() {
-  const builder = flatBuilder;
-
+describe("wrap", function() {
   it("should pack the terminals as atoms", function() {
-    assert.equal("A()", builder("A"));
+    assert.equal("A()", Wrap("A")({}));
   });
 
   it("should pack the non-terminals as calls", function() {
-    assert.equal("r(A,B)", builder("r", "A","B"));
+    assert.equal("r(A,B)", Wrap("r")({}, "A","B"));
   });
 
 });

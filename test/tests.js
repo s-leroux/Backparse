@@ -12,8 +12,10 @@ describe("module", function() {
   });
 });
 
-require("./builder");
+require("./helper");
+require("./predicate");
 require("./parser");
+require("./parser-more");
 require("./parser-advanced");
 
 require("./examples/calculator");
